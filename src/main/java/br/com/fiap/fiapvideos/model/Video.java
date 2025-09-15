@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Video {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String filename;
 
