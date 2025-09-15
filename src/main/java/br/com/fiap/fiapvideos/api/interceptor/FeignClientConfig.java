@@ -1,6 +1,6 @@
 package br.com.fiap.fiapvideos.api.interceptor;
 
-import br.com.fiap.fiapvideos.config.security.manager.TokenManager;
+import br.com.fiap.fiapvideos.security.manager.TokenManager;
 import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

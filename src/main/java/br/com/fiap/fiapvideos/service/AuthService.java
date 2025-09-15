@@ -2,7 +2,7 @@ package br.com.fiap.fiapvideos.service;
 
 import br.com.fiap.fiapvideos.api.client.AuthAPIClient;
 import br.com.fiap.fiapvideos.api.dto.UsuarioDTO;
-import br.com.fiap.fiapvideos.config.security.manager.TokenManager;
+import br.com.fiap.fiapvideos.security.manager.TokenManager;
 import br.com.fiap.fiapvideos.dto.request.LoginRequest;
 import br.com.fiap.fiapvideos.dto.response.LoginResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
