@@ -1,0 +1,114 @@
+package br.com.fiap.fiapvideos.config;
+
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class RabbitConfig {
+
+    public static final String VIDEO_QUEUE = "video.process.queue";
+    public static final String VIDEO_EXCHANGE = "video.exchange";
+    public static final String VIDEO_ROUTING = "video.upload";
+
+//    @Bean
+//    public Exchange videoExchange() {
+//        return ExchangeBuilder.directExchange(VIDEO_EXCHANGE)
+//                .durable(true)
+//                .build();
+//    }
+//
+//    @Bean
+//    public Queue videoQueue() {
+//        return QueueBuilder.durable(VIDEO_QUEUE)
+//                .build();
+//    }
+//
+//    @Bean
+//    public Binding videoBinding() {
+//        return BindingBuilder
+//                .bind(videoQueue())
+//                .to(videoExchange())
+//                .with(VIDEO_ROUTING)
+//                .noargs();
+//    }
+//
+//    @Bean
+//    public MessageConverter messageConverter() {
+//        return new Jackson2JsonMessageConverter();
+//    }
+
+    @Bean
+    public Exchange videoExchange() {
+        return ExchangeBuilder
+                .directExchange(VIDEO_EXCHANGE)
+                .durable(true)
+                .build();
+    }
+
+    @Bean
+    public Queue videoQueue() {
+        return QueueBuilder
+                .durable(VIDEO_QUEUE)
+                .build();
+    }
+
+    @Bean
+    public Binding videoBinding() {
+        return BindingBuilder
+                .bind(videoQueue())
+                .to(videoExchange())
+                .with(VIDEO_ROUTING)
+                .noargs();
+    }
+
+    @Bean
+    Jackson2JsonMessageConverter messageConverter() {
+        return new Jackson2JsonMessageConverter();
+    }
+
+    @Bean
+    RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
+                                  Jackson2JsonMessageConverter messageConverter) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(messageConverter);
+        return rabbitTemplate;
+    }
+
+    @Bean
+    Queue filaDetalhesPedido() {
+        return QueueBuilder
+                .nonDurable("pagamentos.detalhes-pedido")
+                .build();
+    }
+
+    @Bean
+    FanoutExchange fanoutExchange() {
+        return ExchangeBuilder
+                .fanoutExchange("pagamentos.ex")
+                .build();
+    }
+
+    @Bean
+    Binding bindPagamentoPedido(FanoutExchange fanoutExchange) {
+        return BindingBuilder
+                .bind(filaDetalhesPedido())
+                .to(fanoutExchange());
+    }
+
+    @Bean
+    RabbitAdmin criaRabbitAdmin(ConnectionFactory conn) {
+        return new RabbitAdmin(conn);
+    }
+
+    @Bean
+    ApplicationListener<ApplicationReadyEvent> inicializaAdmin(RabbitAdmin rabbitAdmin) {
+        return event -> rabbitAdmin.initialize();
+    }
+}
