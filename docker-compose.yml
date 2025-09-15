@@ -21,7 +21,7 @@ services:
       - fiap-network
     restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=rodrigo@1988
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=fiap_videos
       - MYSQL_ROOT_HOST=%
     ports:
@@ -41,9 +41,9 @@ services:
     platform: linux/amd64
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service:3306/fiap_videos?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=rodrigo@1988
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
     ports:
       - "8082:8082"
     networks:

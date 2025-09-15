@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitConfig {
+public class RabbitMQConfig {
 
     public static final String VIDEO_QUEUE = "video.process.queue";
     public static final String VIDEO_EXCHANGE = "video.exchange";
