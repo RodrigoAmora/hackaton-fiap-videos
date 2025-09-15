@@ -1,0 +1,85 @@
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    platform: linux/amd64
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - fiap-network
+
+  mysql-service:
+    image: mysql/mysql-server:8.0.32-1.2.11-server
+    container_name: mysql-service
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - fiap-network
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=rodrigo@1988
+      - MYSQL_DATABASE=fiap_videos
+      - MYSQL_ROOT_HOST=%
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prodrigo@1988" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  fiap-videos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: 'fiap-videos'
+    platform: linux/amd64
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service:3306/fiap_videos?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rodrigo@1988
+    ports:
+      - "8082:8082"
+    networks:
+      - fiap-network
+    depends_on:
+      - mysql-service
+      - redis
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    platform: linux/amd64
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - fiap-network
+    links:
+      - fiap-videos
+
+networks:
+  fiap-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  mysql-data:
+    driver: local
