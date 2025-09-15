@@ -1,4 +1,4 @@
-package br.com.fiap.fiapvideos.config;
+package br.com.fiap.fiapvideos.amqp.config;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -11,38 +11,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitMQConfig {
+public class VideoAMQPConfiguration {
 
     public static final String VIDEO_QUEUE = "video.process.queue";
     public static final String VIDEO_EXCHANGE = "video.exchange";
     public static final String VIDEO_ROUTING = "video.upload";
-
-//    @Bean
-//    public Exchange videoExchange() {
-//        return ExchangeBuilder.directExchange(VIDEO_EXCHANGE)
-//                .durable(true)
-//                .build();
-//    }
-//
-//    @Bean
-//    public Queue videoQueue() {
-//        return QueueBuilder.durable(VIDEO_QUEUE)
-//                .build();
-//    }
-//
-//    @Bean
-//    public Binding videoBinding() {
-//        return BindingBuilder
-//                .bind(videoQueue())
-//                .to(videoExchange())
-//                .with(VIDEO_ROUTING)
-//                .noargs();
-//    }
-//
-//    @Bean
-//    public MessageConverter messageConverter() {
-//        return new Jackson2JsonMessageConverter();
-//    }
 
     @Bean
     public Exchange videoExchange() {
