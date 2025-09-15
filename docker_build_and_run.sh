@@ -8,6 +8,7 @@ source ~/.bash_profile
 
 ### Application ###
 rm -rf target/
+export $(grep -v '^#' .env | xargs)
 mvn clean install -Pprod -DskipTests
 
 ### Docker ###
