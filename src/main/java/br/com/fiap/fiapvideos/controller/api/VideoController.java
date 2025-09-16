@@ -4,7 +4,6 @@ import br.com.fiap.fiapvideos.dto.response.VideoStatusResponse;
 import br.com.fiap.fiapvideos.service.VideoService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,8 +24,14 @@ public class VideoController {
     }
 
     @GetMapping("/status/{id}")
-    public ResponseEntity<VideoStatusResponse> status(@PathVariable Long id) {
+    public ResponseEntity<String> status(@PathVariable Long id) {
         var resp = videoService.getStatus(id);
+        return ResponseEntity.ok(resp.status());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VideoStatusResponse> buscarVideoPeloId(@PathVariable Long id) {
+        var resp = videoService.buscarVideoPeloId(id);
         return ResponseEntity.ok(resp);
     }
 

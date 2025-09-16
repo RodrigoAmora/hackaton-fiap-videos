@@ -96,6 +96,11 @@ public class VideoService {
                 .orElseThrow(() -> new VideoException("Video não encontrado"));
     }
 
+    public VideoStatusResponse buscarVideoPeloId(Long videoId) {
+        Video video = repository.findById(videoId).orElseThrow(() -> new VideoException("Video não encontrado"));
+        return videoMapper.mapVideoParaVideoStatusResponse(video);
+    }
+
     public Page<VideoStatusResponse> buscarVideosDoUsuario(int page, int size) {
         if (page < 0 || size <= 0) {
             throw new VideoException("Parâmetros de paginação inválidos");
