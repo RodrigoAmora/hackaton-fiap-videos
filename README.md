@@ -47,14 +47,14 @@ Na pasta <b>`Postman`</b> contém a collection para usar os endpoints via Postma
 
 Monitoração do projeto
 ----------------------
-O projeto usa o MySQL como banco da dados para o ambiente local e de produção e o H2 para os testes.
-
-Monitoração do projeto
-----------------------
 A monitoração do projeto para verificar a saúde da aplicação e os recursos utilizados:
 ```shell script
 http://localhost:8082/health
 ```
+
+Banco de Dados
+--------------
+O projeto usa o MySQL como banco da dados para o ambiente local e de produção e o H2 para os testes.
 
 Gerando o arquivo .jar
 ----------------------
