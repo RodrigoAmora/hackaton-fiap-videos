@@ -28,7 +28,7 @@ public class VideoListener {
         updatedStatusVideo(videoId, VideoStatus.PROCESSING);
 
         // Processa o vídeo
-        boolean success = processVideo(String.valueOf(videoId), message.path());
+        boolean success = processVideo(String.valueOf(videoId), message.path(), message.prefixFileName());
         System.out.println("Result ---> " + success);
 
         // Atualiza status final
@@ -36,8 +36,8 @@ public class VideoListener {
         updatedStatusVideo(videoId, videoStatus);
     }
 
-    private boolean processVideo(String videoId, String inputPath) {
-        return videoUtil.compactVideo(videoId, inputPath);
+    private boolean processVideo(String videoId, String inputPath, String prefixFileName) {
+        return videoUtil.compactVideo(videoId, inputPath, prefixFileName);
     }
 
     @Transactional
@@ -47,7 +47,8 @@ public class VideoListener {
 
         video.setStatus(videoStatus);
         if (videoStatus.equals(VideoStatus.DONE)) {
-            video.setResultZipPath("/tmp/outputs/" + videoId + ".zip");
+            var resultZipPath = VideoUtil.VIDEO_FILE_OUTPUT_DIR + "/"+ videoId + ".zip";
+            video.setResultZipPath(resultZipPath);
             System.out.println("Worker: updated status to DONE for video " + videoId);
         }
         if (videoStatus.equals(VideoStatus.FAILED)) {
