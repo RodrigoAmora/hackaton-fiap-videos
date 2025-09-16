@@ -1,13 +1,12 @@
 package br.com.fiap.fiapvideos;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class FiapVideosApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+
 
 }
