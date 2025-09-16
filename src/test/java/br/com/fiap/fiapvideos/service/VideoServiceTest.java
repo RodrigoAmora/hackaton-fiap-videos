@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 class VideoServiceTest {
 
@@ -241,5 +243,60 @@ class VideoServiceTest {
 
         verify(videoRepository, never()).findByOwnerId(anyString(), any(PageRequest.class));
     }
+
+    @Test
+    void buscarVideoPeloId_QuandoVideoExiste_DeveRetornarVideoStatusResponse() {
+        // Arrange
+        Long videoId = 1L;
+        Video video = Video.builder()
+                .id(videoId)
+                .filename("video.mp4")
+                .status(VideoStatus.DONE)
+                .build();
+
+        VideoStatusResponse expectedResponse = new VideoStatusResponse(
+                videoId,
+                "",
+                VideoStatus.DONE.name(),
+                "aaa",
+                "path/to/video",
+                null
+        );
+
+        when(videoRepository.findById(videoId)).thenReturn(Optional.of(video));
+        when(videoMapper.mapVideoParaVideoStatusResponse(video)).thenReturn(expectedResponse);
+
+        // Act
+        VideoStatusResponse response = videoService.buscarVideoPeloId(videoId);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(expectedResponse.id(), response.id());
+        assertEquals(expectedResponse.status(), response.status());
+        assertEquals(expectedResponse.resultZipPath(), response.resultZipPath());
+        assertEquals(expectedResponse.errorMessage(), response.errorMessage());
+
+        verify(videoRepository).findById(videoId);
+        verify(videoMapper).mapVideoParaVideoStatusResponse(video);
+    }
+
+    @Test
+    void buscarVideoPeloId_QuandoVideoNaoExiste_DeveLancarVideoException() {
+        // Arrange
+        Long videoId = 1L;
+        when(videoRepository.findById(videoId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        VideoException exception = assertThrows(
+                VideoException.class,
+                () -> videoService.buscarVideoPeloId(videoId)
+        );
+
+        assertEquals("Video não encontrado", exception.getMessage());
+        verify(videoRepository).findById(videoId);
+        verify(videoMapper, never()).mapVideoParaVideoStatusResponse(any());
+    }
+
+
 
 }
