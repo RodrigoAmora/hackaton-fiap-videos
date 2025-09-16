@@ -23,25 +23,38 @@ sudo docker rmi -f rodrigoamora/rodrigo-springboot
 docker-compose down
 docker-compose down --rmi rodrigoamora/rodrigo-springboot
 
-echo -e "\n\n"
-echo -e "\033[01;32m###########################\033[01;32m"
-echo -e "\033[01;32m### Building images.... ###\033[01;32m"
-echo -e "\033[01;32m###########################\033[01;32m"
-echo -e "\n\n"
 
-sudo docker-compose build
+if [[ $(uname -s) == "Darwin" ]]; then
+  echo "Running on MacOS, forcing linux/amd64"
+  echo -e "\n\n"
 
-echo -e "\n\n"
-echo -e "\033[01;32m########################\033[01;32m"
-echo -e "\033[01;32m### Upping containers ###\033[01;32m"
-echo -e "\033[01;32m########################\033[01;32m"
-echo -e "\n\n"
+  echo -e "\033[01;32m### Building images.... ###\033[01;32m"
+  echo -e "\n\n"
 
-sudo docker-compose up -d
+  sudo docker-compose -f docker-compose-mac.yml build --no-cache
+
+  echo -e "\033[01;32m### Upping containers ###\033[01;32m"
+  echo -e "\n\n"
+
+  sudo docker-compose -f docker-compose-mac.yml up -d --force-recreate
+
+else
+  echo "Running on Linux/Windows"
+  echo -e "\n\n"
+
+  echo -e "\033[01;32m### Building images.... ###\033[01;32m"
+  echo -e "\n\n"
+
+  sudo docker-compose build --no-cache
+
+  echo -e "\033[01;32m### Upping containers ###\033[01;32m"
+  echo -e "\n\n"
+
+  sudo docker-compose up -d --force-recreate
+fi
 
 
 echo -e "\n"
 echo -e "\033[01;32m###############################\033[01;32m"
 echo -e "\033[01;32m### Application running!!!! ###\033[01;32m"
 echo -e "\033[01;32m###############################\033[01;32m"
-
