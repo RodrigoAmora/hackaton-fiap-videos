@@ -5,8 +5,8 @@ Micro-Serviço de processamento de vídeos da fase 5 do Tech Challenge da pós d
 
 Participantes
 -------------
-* Bruno do Amor Divino da Paixão - RM
-* Lucas Matheus Testa - RM 360642
+* Bruno do Amor Divino da Paixão - RM360643
+* Lucas Matheus Testa - RM360642
 * Rodrigo de Lima Amora de Freitas - RM360219
 
 Dependências
@@ -93,9 +93,15 @@ docker-compose up -d
 ```
 
 ##
-Para automatizar esse processo, basta executar o Shellscript <b>`docker_build_and_run.sh`</b>:
+Para automatizar esse processo, basta executar o Shellscript <b>`docker_build_and_run`</b>:<br>
+Linux/MacOS:
 ```shell script
 ./docker_build_and_run.sh
+```
+
+Windows:
+```shell script
+.\docker_build_and_run.bat
 ```
 
 RabbitMQ
