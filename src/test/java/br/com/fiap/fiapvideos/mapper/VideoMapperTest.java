@@ -1,6 +1,6 @@
 package br.com.fiap.fiapvideos.mapper;
 
-import br.com.fiap.fiapvideos.dto.response.VideoStatusResponse;
+import br.com.fiap.fiapvideos.dto.response.VideoResponse;
 import br.com.fiap.fiapvideos.model.Video;
 import br.com.fiap.fiapvideos.model.VideoStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ class VideoMapperTest {
                 .build();
 
         // Act
-        VideoStatusResponse response = videoMapper.mapVideoParaVideoStatusResponse(video);
+        VideoResponse response = videoMapper.mapVideoParaVideoResponse(video);
 
         // Assert
         assertNotNull(response);
@@ -58,7 +58,7 @@ class VideoMapperTest {
                 .build();
 
         // Act
-        VideoStatusResponse response = videoMapper.mapVideoParaVideoStatusResponse(video);
+        VideoResponse response = videoMapper.mapVideoParaVideoResponse(video);
 
         // Assert
         assertNotNull(response);
@@ -80,7 +80,7 @@ class VideoMapperTest {
                 .build();
 
         // Act
-        VideoStatusResponse response = videoMapper.mapVideoParaVideoStatusResponse(video);
+        VideoResponse response = videoMapper.mapVideoParaVideoResponse(video);
 
         // Assert
         assertNotNull(response);
@@ -94,7 +94,7 @@ class VideoMapperTest {
         // Assert
         assertThrows(NullPointerException.class, () -> {
             // Act
-            videoMapper.mapVideoParaVideoStatusResponse(null);
+            videoMapper.mapVideoParaVideoResponse(null);
         });
     }
 }
