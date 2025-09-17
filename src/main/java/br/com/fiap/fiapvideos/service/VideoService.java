@@ -1,6 +1,6 @@
 package br.com.fiap.fiapvideos.service;
 
-import br.com.fiap.fiapvideos.amqp.config.VideoAMQPConfiguration;
+import br.com.fiap.fiapvideos.amqp.config.VideoAMQPConfig;
 import br.com.fiap.fiapvideos.api.dto.UsuarioDTO;
 import br.com.fiap.fiapvideos.dto.VideoMessage;
 import br.com.fiap.fiapvideos.dto.response.VideoResponse;
@@ -75,7 +75,7 @@ public class VideoService {
         if (videoUploaded) {
             var path = VideoUtil.VIDEO_FILE_INPUT_DIR + "/" + fileName;
             var message = new VideoMessage(videoId, path, prefixFileName);
-            rabbitTemplate.convertAndSend(VideoAMQPConfiguration.VIDEO_EXCHANGE, VideoAMQPConfiguration.VIDEO_ROUTING, message);
+            rabbitTemplate.convertAndSend(VideoAMQPConfig.VIDEO_EXCHANGE, VideoAMQPConfig.VIDEO_ROUTING, message);
 
             return new VideoResponse(videoId, video.getOwnerId(), video.getStatus().name(), video.getFilename(), video.getResultZipPath(), video.getErrorMessage());
         } else {

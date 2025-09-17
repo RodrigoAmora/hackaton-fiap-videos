@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class VideoAMQPConfiguration {
+public class VideoAMQPConfig {
 
     public static final String VIDEO_QUEUE = "video.process.queue";
     public static final String VIDEO_EXCHANGE = "video.exchange";

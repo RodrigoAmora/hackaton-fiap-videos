@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         securedEnabled = true,
         jsr250Enabled = true
 )
-public class SecurityConfiguration {
+public class SecurityConfig {
 
     @Autowired
     private TokenAuthenticationFilter tokenAuthenticationFilter;
