@@ -25,30 +25,33 @@ docker-compose down --rmi rodrigoamora/rodrigo-springboot
 
 
 if [[ $(uname -s) == "Darwin" ]]; then
+  echo -e "\n"
   echo "Running on MacOS, forcing linux/amd64"
-  echo -e "\n\n"
+  echo -e "\n"
 
   echo -e "\033[01;32m### Building images.... ###\033[01;32m"
-  echo -e "\n\n"
+  echo -e "\n"
 
   sudo docker-compose -f docker-compose-mac.yml build --no-cache
 
+  echo -e "\n"
   echo -e "\033[01;32m### Upping containers ###\033[01;32m"
-  echo -e "\n\n"
+  echo -e "\n"
 
   sudo docker-compose -f docker-compose-mac.yml up -d --force-recreate
 
 else
+  echo -e "\n"
   echo "Running on Linux/Windows"
-  echo -e "\n\n"
+  echo -e "\n"
 
   echo -e "\033[01;32m### Building images.... ###\033[01;32m"
-  echo -e "\n\n"
+  echo -e "\n"
 
   sudo docker-compose build --no-cache
 
   echo -e "\033[01;32m### Upping containers ###\033[01;32m"
-  echo -e "\n\n"
+  echo -e "\n"
 
   sudo docker-compose up -d --force-recreate
 fi
