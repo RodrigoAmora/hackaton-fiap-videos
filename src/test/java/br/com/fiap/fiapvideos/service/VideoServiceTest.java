@@ -4,6 +4,7 @@ import br.com.fiap.fiapvideos.api.dto.ERole;
 import br.com.fiap.fiapvideos.api.dto.Role;
 import br.com.fiap.fiapvideos.api.dto.UsuarioDTO;
 import br.com.fiap.fiapvideos.dto.VideoMessage;
+import br.com.fiap.fiapvideos.dto.response.VideoResponse;
 import br.com.fiap.fiapvideos.dto.response.VideoStatusResponse;
 import br.com.fiap.fiapvideos.exception.VideoException;
 import br.com.fiap.fiapvideos.mapper.VideoMapper;
@@ -96,7 +97,7 @@ class VideoServiceTest {
         doNothing().when(rabbitTemplate).convertAndSend(anyString(), anyString(), any(VideoMessage.class));
 
         // Act
-        VideoStatusResponse response = videoService.enqueueVideo(fileMock);
+        VideoResponse response = videoService.enqueueVideo(fileMock);
 
         // Assert
         assertNotNull(response);
@@ -187,12 +188,12 @@ class VideoServiceTest {
 
         when(authService.getUsuarioLogado()).thenReturn(usuarioMock);
         when(videoRepository.findByOwnerId(usuarioId, pageRequest)).thenReturn(videoPage);
-        when(videoMapper.mapVideoParaVideoStatusResponse(any(Video.class)))
-                .thenReturn(new VideoStatusResponse(1L, "1111", "PENDING", "aaaaa", "", null))
-                .thenReturn(new VideoStatusResponse(2L, "1111", "COMPLETED", "eeeee", "", null));
+        when(videoMapper.mapVideoParaVideoResponse(any(Video.class)))
+                .thenReturn(new VideoResponse(1L, "1111", "PENDING", "aaaaa", "", null))
+                .thenReturn(new VideoResponse(2L, "1111", "COMPLETED", "eeeee", "", null));
 
         // Act
-        Page<VideoStatusResponse> result = videoService.buscarVideosDoUsuario(page, size);
+        Page<VideoResponse> result = videoService.buscarVideosDoUsuario(page, size);
 
         // Assert
         assertNotNull(result);
@@ -202,7 +203,7 @@ class VideoServiceTest {
         assertEquals(2L, result.getContent().get(1).id());
         assertEquals("COMPLETED", result.getContent().get(1).status());
         verify(videoRepository).findByOwnerId(eq(usuarioId), any(PageRequest.class));
-        verify(videoMapper, times(2)).mapVideoParaVideoStatusResponse(any(Video.class));
+        verify(videoMapper, times(2)).mapVideoParaVideoResponse(any(Video.class));
     }
 
     @Test
@@ -219,14 +220,14 @@ class VideoServiceTest {
         when(videoRepository.findByOwnerId(usuarioId, pageRequest)).thenReturn(emptyPage);
 
         // Act
-        Page<VideoStatusResponse> result = videoService.buscarVideosDoUsuario(page, size);
+        Page<VideoResponse> result = videoService.buscarVideosDoUsuario(page, size);
 
         // Assert
         assertNotNull(result);
         assertTrue(result.getContent().isEmpty());
         assertEquals(0, result.getTotalElements());
         verify(videoRepository).findByOwnerId(eq(usuarioId), any(PageRequest.class));
-        verify(videoMapper, never()).mapVideoParaVideoStatusResponse(any(Video.class));
+        verify(videoMapper, never()).mapVideoParaVideoResponse(any(Video.class));
     }
 
     @Test
@@ -254,7 +255,7 @@ class VideoServiceTest {
                 .status(VideoStatus.DONE)
                 .build();
 
-        VideoStatusResponse expectedResponse = new VideoStatusResponse(
+        VideoResponse expectedResponse = new VideoResponse(
                 videoId,
                 "",
                 VideoStatus.DONE.name(),
@@ -264,10 +265,10 @@ class VideoServiceTest {
         );
 
         when(videoRepository.findById(videoId)).thenReturn(Optional.of(video));
-        when(videoMapper.mapVideoParaVideoStatusResponse(video)).thenReturn(expectedResponse);
+        when(videoMapper.mapVideoParaVideoResponse(video)).thenReturn(expectedResponse);
 
         // Act
-        VideoStatusResponse response = videoService.buscarVideoPeloId(videoId);
+        VideoResponse response = videoService.buscarVideoPeloId(videoId);
 
         // Assert
         assertNotNull(response);
@@ -277,7 +278,7 @@ class VideoServiceTest {
         assertEquals(expectedResponse.errorMessage(), response.errorMessage());
 
         verify(videoRepository).findById(videoId);
-        verify(videoMapper).mapVideoParaVideoStatusResponse(video);
+        verify(videoMapper).mapVideoParaVideoResponse(video);
     }
 
     @Test
@@ -294,7 +295,7 @@ class VideoServiceTest {
 
         assertEquals("Video não encontrado", exception.getMessage());
         verify(videoRepository).findById(videoId);
-        verify(videoMapper, never()).mapVideoParaVideoStatusResponse(any());
+        verify(videoMapper, never()).mapVideoParaVideoResponse(any());
     }
 
 
