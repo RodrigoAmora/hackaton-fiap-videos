@@ -1,5 +1,6 @@
 package br.com.fiap.fiapvideos.controller.api;
 
+import br.com.fiap.fiapvideos.controller.api.doc.VideoControllerDoc;
 import br.com.fiap.fiapvideos.dto.response.VideoResponse;
 import br.com.fiap.fiapvideos.dto.response.VideoStatusResponse;
 import br.com.fiap.fiapvideos.service.VideoService;
@@ -10,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/videos")
-public class VideoController {
+public class VideoController implements VideoControllerDoc {
 
     private final VideoService videoService;
 
@@ -31,14 +32,12 @@ public class VideoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<VideoResponse> buscarVideoPeloId(@PathVariable Long id) {
-        var resp = videoService.buscarVideoPeloId(id);
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.ok(videoService.buscarVideoPeloId(id));
     }
 
     @GetMapping("/meusVideos")
     public ResponseEntity<Page<VideoResponse>> buscarVideosDoUsuario(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
                                                                      @RequestParam(value = "size", required = false, defaultValue = "20") int size) {
-        var resp = videoService.buscarVideosDoUsuario(page, size);
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.ok(videoService.buscarVideosDoUsuario(page, size));
     }
 }
