@@ -298,6 +298,71 @@ class VideoServiceTest {
         verify(videoMapper, never()).mapVideoParaVideoResponse(any());
     }
 
+    @Test
+    void removerVideo_QuandoVideoExiste_DeveRemoverComSucesso() {
+        // Arrange
+        Long videoId = videoMock.getId();
 
+        when(videoRepository.findById(videoId)).thenReturn(Optional.of(videoMock));
+        doNothing().when(videoRepository).delete(videoMock);
+        doNothing().when(videoUtil).deleteVideo(videoMock.getFilename(), videoMock.getResultZipPath());
+
+        // Act
+        assertDoesNotThrow(() -> videoService.removerVideo(videoId));
+
+        // Assert
+        verify(videoRepository, times(1)).delete(videoMock);
+        verify(videoUtil, times(1)).deleteVideo(videoMock.getFilename(), videoMock.getResultZipPath());
+    }
+
+    @Test
+    void removerVideo_QuandoVideoNaoExiste_DeveLancarException() {
+        // Arrange
+        Long videoId = 2L;
+        // Mock do repository diretamente, que é usado pelo método buscarVideo
+        when(videoRepository.findById(videoId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        VideoException exception = assertThrows(
+                VideoException.class,
+                () -> videoService.removerVideo(videoId)
+        );
+
+        // Verifica se o repository foi consultado
+        verify(videoRepository).findById(videoId);
+
+        // Verifica que nenhuma operação de deleção foi executada
+        verify(videoRepository, never()).delete(any());
+        verify(videoUtil, never()).deleteVideo(anyString(), anyString());
+    }
+
+    @Test
+    void removerVideo_QuandoErroAoDeletar_DevePropagarExcecao() {
+        // Arrange
+        Long videoId = videoMock.getId();
+        when(videoRepository.findById(videoId)).thenReturn(Optional.of(videoMock));
+        doThrow(new RuntimeException("Erro ao deletar arquivo")).when(videoUtil).deleteVideo(anyString(), anyString());
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> videoService.removerVideo(videoId));
+
+        verify(videoRepository, times(1)).delete(videoMock);
+        verify(videoUtil, times(1)).deleteVideo(videoMock.getFilename(), videoMock.getResultZipPath());
+    }
+
+    @Test
+    void removerVideo_QuandoVideoTemCaminhoNulo_DeveRemoverApenasDoRepositorio() {
+        // Arrange
+        Long videoId = videoMock.getId();
+        when(videoRepository.findById(videoId)).thenReturn(Optional.of(videoMock));
+        doNothing().when(videoRepository).delete(videoMock);
+
+        // Act
+        assertDoesNotThrow(() -> videoService.removerVideo(videoId));
+
+        // Assert
+        verify(videoRepository, times(1)).delete(videoMock);
+        verify(videoUtil, times(1)).deleteVideo(videoMock.getFilename(), null);
+    }
 
 }
