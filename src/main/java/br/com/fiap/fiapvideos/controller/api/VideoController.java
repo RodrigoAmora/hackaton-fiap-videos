@@ -1,5 +1,6 @@
 package br.com.fiap.fiapvideos.controller.api;
 
+import br.com.fiap.fiapvideos.dto.response.VideoResponse;
 import br.com.fiap.fiapvideos.dto.response.VideoStatusResponse;
 import br.com.fiap.fiapvideos.service.VideoService;
 import org.springframework.data.domain.Page;
@@ -18,26 +19,25 @@ public class VideoController {
     }
 
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
-    public ResponseEntity<VideoStatusResponse> upload(@RequestParam("file") MultipartFile file) {
-        VideoStatusResponse videoStatusResponse = videoService.enqueueVideo(file);
-        return ResponseEntity.accepted().body(videoStatusResponse);
+    public ResponseEntity<VideoResponse> upload(@RequestParam("file") MultipartFile file) {
+        VideoResponse videoResponse = videoService.enqueueVideo(file);
+        return ResponseEntity.accepted().body(videoResponse);
     }
 
     @GetMapping("/status/{id}")
-    public ResponseEntity<String> status(@PathVariable Long id) {
-        var resp = videoService.getStatus(id);
-        return ResponseEntity.ok(resp.status());
+    public ResponseEntity<VideoStatusResponse> status(@PathVariable Long id) {
+        return ResponseEntity.ok(videoService.getStatus(id));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VideoStatusResponse> buscarVideoPeloId(@PathVariable Long id) {
+    public ResponseEntity<VideoResponse> buscarVideoPeloId(@PathVariable Long id) {
         var resp = videoService.buscarVideoPeloId(id);
         return ResponseEntity.ok(resp);
     }
 
     @GetMapping("/meusVideos")
-    public ResponseEntity<Page<VideoStatusResponse>> buscarVideosDoUsuario(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
-                                                                           @RequestParam(value = "size", required = false, defaultValue = "20") int size) {
+    public ResponseEntity<Page<VideoResponse>> buscarVideosDoUsuario(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                                     @RequestParam(value = "size", required = false, defaultValue = "20") int size) {
         var resp = videoService.buscarVideosDoUsuario(page, size);
         return ResponseEntity.ok(resp);
     }

@@ -3,6 +3,7 @@ package br.com.fiap.fiapvideos.service;
 import br.com.fiap.fiapvideos.amqp.config.VideoAMQPConfiguration;
 import br.com.fiap.fiapvideos.api.dto.UsuarioDTO;
 import br.com.fiap.fiapvideos.dto.VideoMessage;
+import br.com.fiap.fiapvideos.dto.response.VideoResponse;
 import br.com.fiap.fiapvideos.dto.response.VideoStatusResponse;
 import br.com.fiap.fiapvideos.exception.VideoException;
 import br.com.fiap.fiapvideos.mapper.VideoMapper;
@@ -48,7 +49,7 @@ public class VideoService {
     }
 
     @CachePut(value = "video_id", key = "#result")
-    public VideoStatusResponse enqueueVideo(MultipartFile file) {
+    public VideoResponse enqueueVideo(MultipartFile file) {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("Arquivo vazio");
         }
@@ -76,7 +77,7 @@ public class VideoService {
             var message = new VideoMessage(videoId, path, prefixFileName);
             rabbitTemplate.convertAndSend(VideoAMQPConfiguration.VIDEO_EXCHANGE, VideoAMQPConfiguration.VIDEO_ROUTING, message);
 
-            return new VideoStatusResponse(videoId, video.getOwnerId(), video.getStatus().name(), video.getFilename(), video.getResultZipPath(), video.getErrorMessage());
+            return new VideoResponse(videoId, video.getOwnerId(), video.getStatus().name(), video.getFilename(), video.getResultZipPath(), video.getErrorMessage());
         } else {
             String errorMessage = "Falha ao salvar arquivo";
 
@@ -92,23 +93,23 @@ public class VideoService {
     @Cacheable(value = "video_status", key = "#videoId")
     public VideoStatusResponse getStatus(Long videoId) {
         return repository.findById(videoId)
-                .map(v -> new VideoStatusResponse(v.getId(), v.getOwnerId(), v.getStatus().name(), v.getFilename(), v.getResultZipPath(), v.getErrorMessage()))
+                .map(v -> new VideoStatusResponse(v.getId(), v.getStatus().name()))
                 .orElseThrow(() -> new VideoException("Video não encontrado"));
     }
 
-    public VideoStatusResponse buscarVideoPeloId(Long videoId) {
+    public VideoResponse buscarVideoPeloId(Long videoId) {
         Video video = repository.findById(videoId).orElseThrow(() -> new VideoException("Video não encontrado"));
-        return videoMapper.mapVideoParaVideoStatusResponse(video);
+        return videoMapper.mapVideoParaVideoResponse(video);
     }
 
-    public Page<VideoStatusResponse> buscarVideosDoUsuario(int page, int size) {
+    public Page<VideoResponse> buscarVideosDoUsuario(int page, int size) {
         if (page < 0 || size <= 0) {
             throw new VideoException("Parâmetros de paginação inválidos");
         }
 
         UsuarioDTO usuarioDTO = getUsuarioLogado();
         PageRequest pageable = PageRequest.of(page, size, Sort.Direction.ASC, "id");
-        return repository.findByOwnerId(usuarioDTO.id(), pageable).map(videoMapper::mapVideoParaVideoStatusResponse);
+        return repository.findByOwnerId(usuarioDTO.id(), pageable).map(videoMapper::mapVideoParaVideoResponse);
     }
 
     private UsuarioDTO getUsuarioLogado() {
