@@ -98,7 +98,7 @@ public class VideoService {
     }
 
     public VideoResponse buscarVideoPeloId(Long videoId) {
-        Video video = repository.findById(videoId).orElseThrow(() -> new VideoException("Video não encontrado"));
+        Video video = buscarVideo(videoId);
         return videoMapper.mapVideoParaVideoResponse(video);
     }
 
@@ -110,6 +110,16 @@ public class VideoService {
         UsuarioDTO usuarioDTO = getUsuarioLogado();
         PageRequest pageable = PageRequest.of(page, size, Sort.Direction.ASC, "id");
         return repository.findByOwnerId(usuarioDTO.id(), pageable).map(videoMapper::mapVideoParaVideoResponse);
+    }
+
+    public void removerVideo(Long videoId) {
+        Video video = buscarVideo(videoId);
+        repository.delete(video);
+        videoUtil.deleteVideo(video.getFilename(), video.getResultZipPath());
+    }
+
+    private Video buscarVideo(Long videoId) {
+        return repository.findById(videoId).orElseThrow(() -> new VideoException("Video não encontrado"));
     }
 
     private UsuarioDTO getUsuarioLogado() {

@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Endpoints de Vídeo")
@@ -38,5 +40,8 @@ public interface VideoControllerDoc {
             @ApiResponse(responseCode = "200", description = "Buscar de vídeo pelo id", content = @Content(schema = @Schema(implementation = VideoResponse.class))),
     })
     ResponseEntity<Page<VideoResponse>> buscarVideosDoUsuario(int page, int size);
+
+    @Operation(summary = "Remover vídeo")
+    HttpStatus removerVideo(@PathVariable Long id);
 
 }

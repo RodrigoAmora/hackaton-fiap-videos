@@ -85,6 +85,20 @@ public class VideoUtil {
         }
     }
 
+    public void deleteVideo(String fileName, String zipFileName) {
+        try {
+            Path uploadDir = Paths.get(VIDEO_FILE_INPUT_DIR);
+            Path pathVideo = uploadDir.resolve(fileName);
+            Files.deleteIfExists(pathVideo);
+
+            Path zipDir = Paths.get(VIDEO_FILE_OUTPUT_DIR);
+            Path pathZip = zipDir.resolve(zipFileName);
+            Files.deleteIfExists(pathZip);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void createDirectories(Path path) {
         try {
             Files.createDirectories(path);
