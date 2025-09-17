@@ -72,6 +72,46 @@ services:
     links:
       - fiap-videos
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    hostname: prometheus
+    restart: unless-stopped
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - 9090:9090
+    networks:
+      - fiap-network
+    depends_on:
+      - fiap-videos
+    links:
+      - fiap-videos
+    user: root
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes:
+      - ./Grafana:/var/lib/grafana
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    networks:
+      - fiap-network
+    depends_on:
+      - prometheus
+    links:
+      - prometheus
+
 networks:
   fiap-network:
     driver: bridge
