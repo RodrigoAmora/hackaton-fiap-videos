@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -77,8 +78,6 @@ public class VideoUtil {
         } catch (Exception e) {
             videoMetrics.incrementUploadsVideoError();
             log.error("Video {} upload failed", fileName);
-
-            e.printStackTrace();
             return false;
         } finally {
             videoMetrics.incrementUploadsVideoTotal();
@@ -99,9 +98,12 @@ public class VideoUtil {
         }
     }
 
-    private void createDirectories(Path path) {
+    private void createDirectories(Path path) throws IOException {
         try {
             Files.createDirectories(path);
-        } catch (Exception e) { /* ignore */ }
+        } catch (IOException e) {
+            log.error("Erro ao criar diretório: {}", path);
+            throw e;
+        }
     }
 }
