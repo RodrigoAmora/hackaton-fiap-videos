@@ -15,18 +15,24 @@ O projeto usa o Java 17 e as seguintes dependências:
 
 * Spring Boot 3.4.5
 * Spring Security
+* Spring Cloud
+* Spring Data JPA
+* Spring dotenv
 * Jakarta Mail
 * Lombok
 * Devtools
-* Redis
-* MySQL
-* H2
+* Micrometer
+* Actuator
+* RabbitMQ/AMQP
 * Swagger
 * OpenAPI
 * Feign
 * RabbitMQ
 * jUnit
 * Mockito
+* MySQL
+* Redis
+* H2 Database
 
 Documentação da API
 -------------------
@@ -45,16 +51,9 @@ http://localhost:8082/redoc
 ##
 Na pasta <b>`Postman`</b> contém a collection para usar os endpoints via Postman.
 
-Monitoração do projeto
-----------------------
-A monitoração do projeto para verificar a saúde da aplicação e os recursos utilizados:
-```shell script
-http://localhost:8082/health
-```
-
-Banco de Dados
+Banco de dados
 --------------
-O projeto usa o MySQL como banco da dados para o ambiente local e de produção e o H2 para os testes.
+O projeto usa o MySQL como banco da dados para o ambiente local e de produção, o Redis para cache o H2 para os testes.
 
 Gerando o arquivo .jar
 ----------------------
@@ -65,9 +64,20 @@ mvn clean install -P{profile} -DskipTests
 
 Rodando os testes
 -----------------
-Para rodar os testes, execute o comando no terminal na raiz do projeto:
+<b>A cobertura de testes do projeto:</b>
+![A cobertura de testes do projeto:](imagens/cobertura-de-testes.png)
+
+##
+
+Para rodar os testes, execute o comando a seguir no terminal na raiz do projeto:
 ```shell script
 mvn test
+```
+
+##
+Para verivicar a cobertura de testes do projeto com com JaCoCo, execute o comando a seguir na raiz do projeto:
+```shell script
+mvn jacoco:report
 ```
 
 Rodando o projeto localmente
@@ -124,4 +134,43 @@ rabbitmq-plugins enable rabbitmq_shovel rabbitmq_shovel_management
 Caso queria rodar o projeto loclamente e rodar o RabbitMQ via Docker, execeto o comando:
 ```shell script
 docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.10-management
+```
+
+Monitoramento
+-------------
+### Health Check
+Para verificar a saúde da aplicação e os recursos utilizados:
+```shell script
+http://localhost:8082/health
+```
+
+##
+
+### Prometheus
+Monitoramento de métricas em tempo real com o Prometheus:
+```shell script
+http://localhost:9090/
+```
+
+##
+Caso queria rodar o projeto loclamente e rodar o Prometheus via Docker, execeto o comando:
+```shell script
+docker run --name prometheus -d -p 127.0.0.1:9090:9090 prom/prometheus
+```
+
+##
+
+### Grafana
+Visualização e análise de métricas através de dashboards com o Grafana:
+```shell script
+http://localhost:3000/
+```
+
+<b>Username:</b> admin <br>
+<b>Password:</b> fiap-videos
+
+##
+Caso queria rodar o projeto loclamente e rodar o Grafana via Docker, execeto o comando:
+```shell script
+docker run -d --name=grafana -p 3000:3000 grafana/grafana
 ```
