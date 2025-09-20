@@ -11,8 +11,22 @@ public class NotificationService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void notifyError(String userEmail, Long videoId, String error) {
-        if (userEmail == null || videoId == null || error == null) {
+    public void notifyError(String userEmail, Long videoId) {
+        var subject = "Erro no processamento do vídeo";
+        var text = String.format("Ocorreu um erro no processamento do vídeo %d", videoId);
+
+        sendEmail(userEmail, videoId, subject, text);
+    }
+
+    public void notifySuccess(String userEmail, Long videoId) {
+        var subject = "Processamento do vídeo concluído com sucesso";
+        var text = String.format("Processamento do vídeo %d concluído com sucesso!", videoId);
+
+        sendEmail(userEmail, videoId, subject, text);
+    }
+
+    private void sendEmail(String userEmail, Long videoId, String subject, String text) {
+        if (userEmail == null || videoId == null) {
             throw new IllegalArgumentException("Parâmetros não podem ser nulos");
         }
 
@@ -23,10 +37,8 @@ public class NotificationService {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(userEmail);
-        message.setSubject("Erro no processamento do vídeo");
-        message.setText(String.format("Ocorreu um erro no processamento do vídeo %d: %s", videoId, error));
+        message.setSubject(subject);
+        message.setText(text);
         mailSender.send(message);
-
     }
-
 }
