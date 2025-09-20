@@ -36,7 +36,7 @@ class NotificationServiceTest {
         doNothing().when(mailSender).send(any(SimpleMailMessage.class));
 
         // Act
-        notificationService.notifyError(userEmail, videoId, error);
+        notificationService.notifyError(userEmail, videoId);
 
         // Assert
         verify(mailSender).send(messageCaptor.capture());
@@ -46,7 +46,7 @@ class NotificationServiceTest {
         assertEquals(userEmail, message.getTo()[0]);
         assertEquals("Erro no processamento do vídeo", message.getSubject());
         assertEquals(
-                String.format("Ocorreu um erro no processamento do vídeo %d: %s", videoId, error),
+                String.format("Ocorreu um erro no processamento do vídeo %d", videoId),
                 message.getText()
         );
     }
@@ -60,7 +60,7 @@ class NotificationServiceTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () ->
-                notificationService.notifyError(userEmail, videoId, error)
+                notificationService.notifyError(userEmail, videoId)
         );
 
         verify(mailSender, never()).send(any(SimpleMailMessage.class));
@@ -75,7 +75,7 @@ class NotificationServiceTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () ->
-                notificationService.notifyError(userEmail, videoId, error)
+                notificationService.notifyError(userEmail, videoId)
         );
 
         verify(mailSender, never()).send(any(SimpleMailMessage.class));
@@ -85,12 +85,11 @@ class NotificationServiceTest {
     void notifyError_QuandoErrorNulo_DeveLancarException() {
         // Arrange
         String userEmail = "usuario@test.com";
-        Long videoId = 123L;
-        String error = null;
+        Long videoId = null;
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () ->
-                notificationService.notifyError(userEmail, videoId, error)
+                notificationService.notifyError(userEmail, videoId)
         );
 
         verify(mailSender, never()).send(any(SimpleMailMessage.class));
@@ -105,9 +104,76 @@ class NotificationServiceTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () ->
-                notificationService.notifyError(userEmail, videoId, error)
+                notificationService.notifyError(userEmail, videoId)
         );
 
         verify(mailSender, never()).send(any(SimpleMailMessage.class));
     }
+
+    @Test
+    void notifySuccess_QuandoChamado_DeveEnviarEmailCorretamente() {
+        // Arrange
+        String userEmail = "usuario@test.com";
+        Long videoId = 123L;
+
+        doNothing().when(mailSender).send(any(SimpleMailMessage.class));
+
+        // Act
+        notificationService.notifySuccess(userEmail, videoId);
+
+        // Assert
+        verify(mailSender).send(messageCaptor.capture());
+
+        SimpleMailMessage message = messageCaptor.getValue();
+        assertNotNull(message);
+        assertEquals(userEmail, message.getTo()[0]);
+        assertEquals("Processamento do vídeo concluído com sucesso", message.getSubject());
+        assertEquals(
+                String.format("Processamento do vídeo %d concluído com sucesso!", videoId),
+                message.getText()
+        );
+    }
+
+    @Test
+    void notifySuccess_QuandoEmailNulo_DeveLancarException() {
+        // Arrange
+        String userEmail = null;
+        Long videoId = 123L;
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () ->
+                notificationService.notifySuccess(userEmail, videoId)
+        );
+
+        verify(mailSender, never()).send(any(SimpleMailMessage.class));
+    }
+
+    @Test
+    void notifySuccess_QuandoVideoIdNulo_DeveLancarException() {
+        // Arrange
+        String userEmail = "usuario@test.com";
+        Long videoId = null;
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () ->
+                notificationService.notifySuccess(userEmail, videoId)
+        );
+
+        verify(mailSender, never()).send(any(SimpleMailMessage.class));
+    }
+
+    @Test
+    void notifySuccess_QuandoEmailInvalido_DeveLancarException() {
+        // Arrange
+        String userEmail = "email-invalido";
+        Long videoId = 123L;
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () ->
+                notificationService.notifySuccess(userEmail, videoId)
+        );
+
+        verify(mailSender, never()).send(any(SimpleMailMessage.class));
+    }
+
 }

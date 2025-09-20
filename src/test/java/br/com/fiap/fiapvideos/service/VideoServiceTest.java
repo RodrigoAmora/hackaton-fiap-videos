@@ -6,7 +6,8 @@ import br.com.fiap.fiapvideos.api.dto.UsuarioDTO;
 import br.com.fiap.fiapvideos.dto.VideoMessage;
 import br.com.fiap.fiapvideos.dto.response.VideoResponse;
 import br.com.fiap.fiapvideos.dto.response.VideoStatusResponse;
-import br.com.fiap.fiapvideos.exception.VideoException;
+import br.com.fiap.fiapvideos.exception.VideoNotFoundException;
+import br.com.fiap.fiapvideos.exception.VideoNotSavedException;
 import br.com.fiap.fiapvideos.mapper.VideoMapper;
 import br.com.fiap.fiapvideos.model.Video;
 import br.com.fiap.fiapvideos.model.VideoStatus;
@@ -131,11 +132,11 @@ class VideoServiceTest {
         when(videoUtil.uploadVideo(any(), any())).thenReturn(false);
 
         // Act & Assert
-        assertThrows(VideoException.class,
+        assertThrows(VideoNotSavedException.class,
                 () -> videoService.enqueueVideo(fileMock),
                 "Falha ao salvar arquivo");
 
-        verify(videoRepository, times(1)).save(any(Video.class)); // Salva inicial e atualização do erro
+        verify(videoRepository, times(1)).saveAndFlush(any(Video.class)); // Salva inicial e atualização do erro
     }
 
     @Test
@@ -238,7 +239,7 @@ class VideoServiceTest {
         int invalidSize = -1;
 
         // Act & Assert
-        assertThrows(VideoException.class, () ->
+        assertThrows(VideoNotFoundException.class, () ->
                 videoService.buscarVideosDoUsuario(invalidPage, invalidSize)
         );
 
@@ -288,8 +289,8 @@ class VideoServiceTest {
         when(videoRepository.findById(videoId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        VideoException exception = assertThrows(
-                VideoException.class,
+        VideoNotFoundException exception = assertThrows(
+                VideoNotFoundException.class,
                 () -> videoService.buscarVideoPeloId(videoId)
         );
 
@@ -323,8 +324,8 @@ class VideoServiceTest {
         when(videoRepository.findById(videoId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        VideoException exception = assertThrows(
-                VideoException.class,
+        VideoNotFoundException exception = assertThrows(
+                VideoNotFoundException.class,
                 () -> videoService.removerVideo(videoId)
         );
 
