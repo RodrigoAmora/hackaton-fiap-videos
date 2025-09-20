@@ -35,6 +35,8 @@
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <dependencyManagement>
@@ -126,13 +128,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-data-rest</artifactId>
-            <version>1.5.12</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>1.6.15</version>
+            <version>1.8.0</version>
         </dependency>
 
         <!-- Redis -->
@@ -242,6 +238,73 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.11</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/FiapVideosApplication.*</exclude>
+
+                        <exclude>**/api/dto/**</exclude>
+
+                        <!-- Exclusão das classes de Segurança -->
+                        <exclude>**/security/**</exclude>
+
+                        <!-- Exclusão das classes de Exception -->
+                        <exclude>**/*Exception*.*</exclude>
+
+                        <!-- Exclusão das classes de Controller -->
+                        <exclude>**/*Controller*.*</exclude>
+
+                        <!-- Exclusão das classes de Métricas -->
+                        <exclude>**/*Metrics.*</exclude>
+
+                        <!-- Exclusão das classes de Config -->
+                        <exclude>**/config/**</exclude>
+                        <exclude>**/*Config.*</exclude>
+
+                        <!-- Exclusão das classes de DTO, Request e Response -->
+                        <exclude>**/*DTO.*</exclude>
+                        <exclude>**/*Request.*</exclude>
+                        <exclude>**/*Response.*</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
