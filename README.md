@@ -53,14 +53,14 @@ Na pasta <b>`Postman`</b> contém a collection para usar os endpoints via Postma
 
 Banco de dados
 --------------
-O projeto usa o MySQL como banco da dados para o ambiente local e de produção, o Redis para cache o H2 para os testes.
+O projeto usa o MySQL como banco da dados para o ambiente local e de produção, o Redis para cache e o H2 para os testes.
 
 Configurações projeto:
 ---------------------
 Crie o arquivo <b>`.env`</b> na riaz do projeto e adicione as seguinte variáveis nele:<br>
 MAIL_HOST=SMTP do seu e-mail <br>
 MAIL_PORT=587 <br>
-MAIL_USERNAME=Seu e-mil <br>
+MAIL_USERNAME=Seu e-mail <br>
 MAIL_PASSWORD=Senha do seu e-mail <br>
 
 Gerando o arquivo .jar
@@ -119,7 +119,7 @@ Linux/MacOS:
 
 Windows:
 ```shell script
-.\docker_build_and_run.bat
+./docker_build_and_run.bat
 ```
 
 RabbitMQ
