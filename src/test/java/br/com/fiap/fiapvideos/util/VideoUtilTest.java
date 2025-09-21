@@ -19,7 +19,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 class VideoUtilTest {
 
@@ -66,21 +67,6 @@ class VideoUtilTest {
         verify(videoMetrics).incrementUploadsVideoSuccess();
         verify(videoMetrics).incrementUploadsVideoTotal();
     }
-
-//    @Test
-//    void uploadVideo_QuandoErroAoSalvar_DeveRetornarFalse() throws IOException {
-//        // Arrange
-//        MultipartFile file = mock(MultipartFile.class);
-//        doThrow(new IOException()).when(file).transferTo(any(File.class));
-//
-//        // Act
-//        boolean resultado = videoUtil.uploadVideo(file, "teste.mp4");
-//
-//        // Assert
-//        assertFalse(resultado);
-//        verify(videoMetrics).incrementUploadsVideoError();
-//        verify(videoMetrics).incrementUploadsVideoTotal();
-//    }
 
     @Test
     void compactVideo_QuandoArquivoValido_DeveRetornarTrue() throws IOException {
