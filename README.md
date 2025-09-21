@@ -55,6 +55,14 @@ Banco de dados
 --------------
 O projeto usa o MySQL como banco da dados para o ambiente local e de produção, o Redis para cache o H2 para os testes.
 
+Configurações projeto:
+---------------------
+Crie o arquivo <b>`.env`</b> na riaz do projeto e adicione as seguinte variáveis nele:<br>
+MAIL_HOST=SMTP do seu e-mail <br>
+MAIL_PORT=587 <br>
+MAIL_USERNAME=Seu e-mil <br>
+MAIL_PASSWORD=Senha do seu e-mail <br>
+
 Gerando o arquivo .jar
 ----------------------
 Para gerar o arquivo <b>.jar</b>, execute o comando via terminal no diretório raiz do projeto:
@@ -75,14 +83,14 @@ mvn test
 ```
 
 ##
-Para verivicar a cobertura de testes do projeto com com JaCoCo, execute o comando a seguir na raiz do projeto:
+Para gerar o relatório de cobertura de testes do projeto com o JaCoCo, execute o comando a seguir na raiz do projeto:
 ```shell script
 mvn jacoco:report
 ```
 
 Rodando o projeto localmente
 ----------------------------
-Para iniciar a aplicação, execute o comando no terminal na raiz do projeto:
+Para iniciar a aplicação localmente, execute o comando no terminal na raiz do projeto:
 
 ```shell script
 mvn spring-boot:run
@@ -138,6 +146,8 @@ docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.10-ma
 
 Monitoramento
 -------------
+Monitoramento da aplicação.
+
 ### Health Check
 Para verificar a saúde da aplicação e os recursos utilizados:
 ```shell script
@@ -167,7 +177,7 @@ http://localhost:3000/
 ```
 
 <b>Username:</b> admin <br>
-<b>Password:</b> fiap-videos
+<b>Password:</b> admin
 
 ##
 Caso queria rodar o projeto loclamente e rodar o Grafana via Docker, execeto o comando:
