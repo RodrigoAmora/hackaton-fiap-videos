@@ -79,7 +79,7 @@ Rodando os testes
 
 ##
 
-Para rodar os testes, execute o comando a seguir no terminal na raiz do projeto:
+Para rodar os testes, execute o comando na raiz do projeto:
 ```shell script
 mvn test
 ```
