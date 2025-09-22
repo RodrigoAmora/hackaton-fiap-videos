@@ -54,10 +54,12 @@ Na pasta <b>`Postman`</b> contém a collection para usar os endpoints via Postma
 Banco de dados
 --------------
 O projeto usa o MySQL como banco da dados para o ambiente local e de produção, o Redis para cache e o H2 para os testes.
+<br>
+<b>OBS:</b> O script SQL está dentro da pasta `resources` do projeto. 
 
 Configurações projeto:
 ---------------------
-Crie o arquivo <b>`.env`</b> na riaz do projeto e adicione as seguinte variáveis nele:<br>
+Crie o arquivo <b>`.env`</b> na raiz do projeto e adicione as seguinte variáveis nele:<br>
 MAIL_HOST=SMTP do seu e-mail <br>
 MAIL_PORT=587 <br>
 MAIL_USERNAME=Seu e-mail <br>
@@ -65,7 +67,7 @@ MAIL_PASSWORD=Senha do seu e-mail <br>
 
 Gerando o arquivo .jar
 ----------------------
-Para gerar o arquivo <b>.jar</b>, execute o comando via terminal no diretório raiz do projeto:
+Para gerar o arquivo <b>.jar</b>, execute o comando na raiz do projeto:
 ```shell script
 mvn clean install -P{profile} -DskipTests
 ```
@@ -83,14 +85,14 @@ mvn test
 ```
 
 ##
-Para gerar o relatório de cobertura de testes do projeto com o JaCoCo, execute o comando a seguir na raiz do projeto:
+Para gerar o relatório de cobertura de testes do projeto com o JaCoCo, execute o comando na raiz do projeto:
 ```shell script
-mvn jacoco:report
+mvn clean test jacoco:report
 ```
 
 Rodando o projeto localmente
 ----------------------------
-Para iniciar a aplicação localmente, execute o comando no terminal na raiz do projeto:
+Para iniciar a aplicação localmente, execute o comando na raiz do projeto:
 
 ```shell script
 mvn spring-boot:run
