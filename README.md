@@ -55,12 +55,12 @@ Banco de dados
 --------------
 O projeto usa o MySQL como banco da dados para o ambiente local e de produção, o Redis para cache e o H2 para os testes.
 <br>
-<b>OBS:</b> O script SQL está dentro da pasta `resources` do projeto. 
+<b>OBS:</b> O script SQL está dentro da pasta <b>`resources`</b> do projeto. 
 
 Configurações projeto:
 ---------------------
 Crie o arquivo <b>`.env`</b> na raiz do projeto e adicione as seguinte variáveis nele:<br>
-MAIL_HOST=SMTP do seu e-mail <br>
+MAIL_HOST=smtp.provedor_email.com <br>
 MAIL_PORT=587 <br>
 MAIL_USERNAME=Seu e-mail <br>
 MAIL_PASSWORD=Senha do seu e-mail <br>
