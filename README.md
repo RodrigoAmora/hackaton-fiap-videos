@@ -1,7 +1,7 @@
 # hackaton-fiap-videos
 Descrição
 ---------
-Micro-Serviço de processamento de vídeos da fase 5 do Tech Challenge da pós de Arquitetura de Software da FIAP.
+Micro-Serviço de upload e processamento de vídeos do Hackaton da pós de Arquitetura de Software da FIAP.
 
 Participantes
 -------------
