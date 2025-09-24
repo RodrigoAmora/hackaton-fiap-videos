@@ -105,6 +105,7 @@ public class VideoService {
         return videoRepository.findByOwnerId(usuarioDTO.id(), pageable).map(videoMapper::mapVideoParaVideoResponse);
     }
 
+    // Remove o vídeo excluído do cache
     @Caching(evict = {
             @CacheEvict(value = "video_id", key = "#videoId"),
             @CacheEvict(value = "videos_user", key = "#videoId")
