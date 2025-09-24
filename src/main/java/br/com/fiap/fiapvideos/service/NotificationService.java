@@ -30,8 +30,7 @@ public class NotificationService {
             throw new IllegalArgumentException("Parâmetros não podem ser nulos");
         }
 
-        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-        if (!userEmail.matches(emailRegex)) {
+        if (!isValidEmail(userEmail)) {
             throw new IllegalArgumentException("Email inválido");
         }
 
@@ -41,4 +40,10 @@ public class NotificationService {
         message.setText(text);
         mailSender.send(message);
     }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        return email.matches(emailRegex);
+    }
+
 }
