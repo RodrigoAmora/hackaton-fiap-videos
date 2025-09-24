@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "67fbd569-738b-4f4b-9ef1-dbc3c126c1eb",
+		"name": "FIAPVideos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8543961"
+	},
+	"item": [
+		{
+			"name": "Upload Vídeo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6ekBlbWFpbC5jb20iLCJpYXQiOjE3NTU3OTY1MDcsImV4cCI6MTc1NTg4MjkwN30.ng_UEBtKMQP6gRS3x7gn65l6NEBhp_Qx98Gjxe6ccwM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/video/upload",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"video",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verificar Status do Vídeo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6ekBlbWFpbC5jb20iLCJpYXQiOjE3NTU3OTY1MDcsImV4cCI6MTc1NTg4MjkwN30.ng_UEBtKMQP6gRS3x7gn65l6NEBhp_Qx98Gjxe6ccwM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/video/status/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"video",
+						"status",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Vídeo pelo id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6ekBlbWFpbC5jb20iLCJpYXQiOjE3NTU3OTY1MDcsImV4cCI6MTc1NTg4MjkwN30.ng_UEBtKMQP6gRS3x7gn65l6NEBhp_Qx98Gjxe6ccwM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/video/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"video",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Vídeos do usuário logado",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6ekBlbWFpbC5jb20iLCJpYXQiOjE3NTU3OTY1MDcsImV4cCI6MTc1NTg4MjkwN30.ng_UEBtKMQP6gRS3x7gn65l6NEBhp_Qx98Gjxe6ccwM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/video/meusVideos",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"video",
+						"meusVideos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Apagar Vídeo pelo id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6ekBlbWFpbC5jb20iLCJpYXQiOjE3NTU3OTY1MDcsImV4cCI6MTc1NTg4MjkwN30.ng_UEBtKMQP6gRS3x7gn65l6NEBhp_Qx98Gjxe6ccwM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/video/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"video",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"fulano@email.com\",\n    \"senha\": \"senha123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/fiap/auth/login",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"fiap",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pegar usuário logado",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6ekBlbWFpbC5jb20iLCJpYXQiOjE3NTU3OTY1MDcsImV4cCI6MTc1NTg4MjkwN30.ng_UEBtKMQP6gRS3x7gn65l6NEBhp_Qx98Gjxe6ccwM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/fiap/auth/me",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"fiap",
+						"auth",
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": ""
+		}
+	]
+}
