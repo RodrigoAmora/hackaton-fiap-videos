@@ -68,6 +68,7 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
+          mkdir tagert
           
           # Criar diretório de deploy
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} 'mkdir -p ~/app'
