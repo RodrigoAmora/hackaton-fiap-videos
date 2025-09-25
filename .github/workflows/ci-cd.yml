@@ -50,21 +50,35 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
-
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} 'mkdir -p ~/app'
           
+          # Criar diretório da aplicação e prometheus
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
+            mkdir -p ~/app/prometheus
+          '
+          
+          # Criar arquivo de configuração do Prometheus
+          echo 'global:
+            scrape_interval: 15s
+          scrape_configs:
+            - job_name: "spring-actuator"
+              metrics_path: "/actuator/prometheus"
+              static_configs:
+                - targets: ["fiap-videos:8082"]' > prometheus.yml
+          
+          # Copiar arquivos
           scp -o StrictHostKeyChecking=no -i private_key.pem \
             docker-compose.yml \
-            ${USERNAME}@${HOST}:~/app/
-
+            prometheus.yml \
+            ${USERNAME}@${HOST}:~/app/prometheus/
+          
+          # Executar deploy
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
             cd ~/app && \
-            docker-compose down || true && \
-            docker system prune -f && \
+            docker-compose down --volumes && \
             docker-compose pull && \
             docker-compose up -d
           '
-
+          
           rm -f private_key.pem
 
   deploy:
