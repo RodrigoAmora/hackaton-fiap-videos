@@ -28,7 +28,7 @@ jobs:
           ls -la target/*.jar  # Verificar se o JAR foi gerado
 
       - name: Upload JAR artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: application-jar
           path: target/*.jar
