@@ -1,4 +1,4 @@
-name: ci-cd.yml
+name: FiapVideos CI/CD Pipeline
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 45
 
     steps:
       - uses: actions/checkout@v3
@@ -23,42 +23,8 @@ jobs:
 
       - name: Build and Test
         run: |
-          mvn -B clean package -Pprod
-          echo "Verificando o JAR gerado:"
-          ls -la target/*.jar
-
-      - name: Copy files to EC2
-        env:
-          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          HOST: ${{ secrets.EC2_HOST }}
-          USERNAME: ${{ secrets.EC2_USERNAME }}
-        run: |
-          echo "$PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-
-          # Criar diretório de deploy
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} 'mkdir -p ~/app'
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} 'mkdir -p ~/app/target'
-          
-          # Garantir que o diretório target existe e que o JAR foi gerado
-          ls -la target/
-
-          # Copiar arquivos necessários
-          scp -o StrictHostKeyChecking=no -i private_key.pem \
-            Dockerfile \
-            docker-compose.yml \
-            target/*.jar \
-            ${USERNAME}@${HOST}:~/app/
-
-          # Executar Docker na EC2
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
-            cd ~/app && \
-            docker-compose down || true && \
-            docker system prune -f && \
-            docker-compose up -d --build
-          '
-
-          rm -f private_key.pem
+          ./mvnw -B clean package
+          ls -la target/*.jar  # Verificar se o JAR foi gerado
 
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main'
@@ -86,6 +52,7 @@ jobs:
   deploy:
     needs: build-and-test
     if: github.ref == 'refs/heads/main'
+    timeout-minutes: 45
     runs-on: ubuntu-latest
 
     steps:
@@ -97,28 +64,30 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          debug: true  # Ativa logs detalhados
+          command_timeout: "20m"
           script: |
             # Criar diretório se não existir
             mkdir -p ~/app
-            
+
             # Copiar docker-compose
             cp ~/app/docker-compose.yml ~/app/docker-compose.yml.backup || true
-            
+
             # Download do docker-compose mais recente
             curl -o ~/app/docker-compose.yml https://raw.githubusercontent.com/${{ github.repository }}/main/docker-compose.yml
-            
+
             # Parar containers existentes
             cd ~/app
             docker-compose down || true
-            
+
             # Remover imagens antigas
             docker system prune -f
-            
+
             # Pull da nova imagem
             docker-compose pull
-            
+
             # Subir aplicação
             docker-compose up -d
-            
+
             # Verificar logs
             docker-compose logs --tail=100
