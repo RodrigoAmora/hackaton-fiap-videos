@@ -53,7 +53,9 @@ jobs:
           
           # Criar diretório da aplicação e prometheus
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
-            mkdir -p ~/app/prometheus
+            mkdir -p ~/app/prometheus && \
+            chmod 755 ~/app && \
+            chmod 755 ~/app/prometheus
           '
           
           # Criar arquivo de configuração do Prometheus
