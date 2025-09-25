@@ -25,7 +25,7 @@ public class SwaggerConfig {
                         )
                 )
                 .info(new Info()
-                        .title("API Autenticação")
+                        .title("API FIAP Vídeos")
                         .description("Documentação da API")
                         .version("1.0"))
                 .info(new Info()
