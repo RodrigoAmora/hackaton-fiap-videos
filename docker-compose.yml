@@ -128,5 +128,6 @@ volumes:
   outputs:
   prometheus-data:
   grafana-data:
+  redis-data:
   mysql-data:
     driver: local
