@@ -53,14 +53,8 @@ jobs:
           
           # Criar diretório da aplicação e prometheus
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
-            if [ ! -d ~/app ]; then
-              mkdir -p ~/app
-            fi
-            if [ ! -d ~/app/prometheus ]; then
-              mkdir -p ~/app/prometheus
-            fi
-            find ~/app -type d -exec chmod 755 {} \;
-            find ~/app -type f -exec chmod 644 {} \;
+            sudo rm -rf ~/app
+            mkdir -p ~/app/prometheus
           '
           
           # Criar arquivo de configuração do Prometheus
@@ -81,6 +75,7 @@ jobs:
           # Executar deploy
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
             cd ~/app && \
+            sudo chown -R ${USER}:${USER} . && \
             docker-compose down --volumes && \
             docker-compose pull && \
             docker-compose up -d
