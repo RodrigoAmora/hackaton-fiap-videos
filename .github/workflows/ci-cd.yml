@@ -29,6 +29,36 @@ jobs:
       - name: Build and Test
         run: mvn -B clean verify -Pprod
 
+      - name: Copy files to EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+          USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          mkdir tagert
+
+          # Criar diretório de deploy
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} 'mkdir -p ~/app'
+
+          # Copiar arquivos necessários
+          scp -o StrictHostKeyChecking=no -i private_key.pem \
+            Dockerfile \
+            docker-compose.yml \
+            target/*.jar \
+            ${USERNAME}@${HOST}:~/app/
+
+          # Executar Docker na EC2
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
+            cd ~/app && \
+            docker-compose down || true && \
+            docker system prune -f && \
+            docker-compose up -d --build
+          '
+
+          rm -f private_key.pem
+
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v2
@@ -59,36 +89,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Copy files to EC2
-        env:
-          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          HOST: ${{ secrets.EC2_HOST }}
-          USERNAME: ${{ secrets.EC2_USERNAME }}
-        run: |
-          echo "$PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          mkdir tagert
-          
-          # Criar diretório de deploy
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} 'mkdir -p ~/app'
-          
-          # Copiar arquivos necessários
-          scp -o StrictHostKeyChecking=no -i private_key.pem \
-            Dockerfile \
-            docker-compose.yml \
-            target/*.jar \
-            ${USERNAME}@${HOST}:~/app/
-          
-          # Executar Docker na EC2
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
-            cd ~/app && \
-            docker-compose down || true && \
-            docker system prune -f && \
-            docker-compose up -d --build
-          '
-          
-          rm -f private_key.pem
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
