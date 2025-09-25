@@ -104,7 +104,7 @@ services:
     image: grafana/grafana
     container_name: grafana
     volumes:
-      - ./Grafana:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
     restart: unless-stopped
     ports:
       - 3000:3000
