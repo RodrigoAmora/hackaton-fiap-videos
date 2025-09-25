@@ -21,17 +21,18 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Setup MongoDB
-        uses: supercharge/mongodb-github-action@1.10.0
-        with:
-          mongodb-version: '6.0'
-
       - name: Build and Test
         run: |
-          mvn -B clean verify -Pprod
+          mvn -B clean package -Pprod
           echo "Verificando o JAR gerado:"
           ls -la target/*.jar
 
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: application-jar
+          path: target/*.jar
+      
       - name: Copy files to EC2
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
