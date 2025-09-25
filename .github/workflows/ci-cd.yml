@@ -27,12 +27,6 @@ jobs:
           echo "Verificando o JAR gerado:"
           ls -la target/*.jar
 
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: application-jar
-          path: target/*.jar
-      
       - name: Copy files to EC2
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
