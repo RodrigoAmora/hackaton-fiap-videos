@@ -70,11 +70,10 @@ jobs:
           
           # Copiar arquivos
           scp -o StrictHostKeyChecking=no -i private_key.pem \
-            docker-compose.yml \
-            prometheus.yml \
-            ${USERNAME}@${HOST}:~/app/prometheus/
+            docker-compose.yml prometheus.yml \
+            ${USERNAME}@${HOST}:~/app/
           
-          # Executar deploy
+          # Deploy
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
             cd ~/app && \
             docker-compose down --volumes && \
