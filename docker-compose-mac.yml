@@ -51,6 +51,10 @@ services:
     depends_on:
       - mysql-service
       - redis
+      - rabbitmq
+    volumes:
+      - uploads:/uploads
+      - outputs:/outputs
     restart: always
 
   rabbitmq:
