@@ -24,7 +24,46 @@ jobs:
       - name: Build and Test
         run: |
           ./mvnw -B clean package
+          echo "Verificando o JAR gerado:"
           ls -la target/*.jar  # Verificar se o JAR foi gerado
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: application-jar
+          path: target/*.jar
+
+      - name: Copy files to EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+          USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          
+          # Criar diretório de deploy
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} 'mkdir -p ~/app'
+          
+          # Copiar arquivos necessários
+          scp -o StrictHostKeyChecking=no -i private_key.pem \
+            Dockerfile \
+            docker-compose.yml \
+            target/*.jar \
+            ${USERNAME}@${HOST}:~/app/
+          
+          # Verificar se os arquivos foram copiados
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} 'ls -la ~/app/'
+          
+          # Executar Docker na EC2
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
+            cd ~/app && \
+            docker-compose down || true && \
+            docker system prune -f && \
+            docker-compose up -d --build
+          '
+          
+          rm -f private_key.pem
 
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main'
