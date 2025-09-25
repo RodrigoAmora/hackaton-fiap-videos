@@ -24,7 +24,8 @@ COPY src src
 RUN ./mvnw package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
-
+# Expõe a porta da aplicação
+EXPOSE 8082
 
 # Define o comando de inicialização do seu projeto
 CMD java -jar app.jar
