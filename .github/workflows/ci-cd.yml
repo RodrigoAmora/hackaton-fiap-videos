@@ -9,7 +9,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v3
@@ -21,49 +21,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build and Test
-        run: |
-          ./mvnw -B clean package
-          echo "Verificando o JAR gerado:"
-          ls -la target/*.jar  # Verificar se o JAR foi gerado
+      - name: Build with Maven
+        run: mvn -B clean package -DskipTests
 
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: application-jar
-          path: target/*.jar
-
-      - name: Copy files to EC2
-        env:
-          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          HOST: ${{ secrets.EC2_HOST }}
-          USERNAME: ${{ secrets.EC2_USERNAME }}
-        run: |
-          echo "$PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          
-          # Criar diretório de deploy
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} 'mkdir -p ~/app'
-          
-          # Copiar arquivos necessários
-          scp -o StrictHostKeyChecking=no -i private_key.pem \
-            Dockerfile \
-            docker-compose.yml \
-            target/*.jar \
-            ${USERNAME}@${HOST}:~/app/
-          
-          # Verificar se os arquivos foram copiados
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} 'ls -la ~/app/'
-          
-          # Executar Docker na EC2
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
-            cd ~/app && \
-            docker-compose down || true && \
-            docker system prune -f && \
-            docker-compose up -d --build
-          '
-          
-          rm -f private_key.pem
+      - name: List target directory
+        run: ls -la target/
 
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main'
@@ -72,26 +34,47 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       - name: Build and Push Docker Image
-        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
             rodrigoamora/rodrigo-springboot:latest
             rodrigoamora/rodrigo-springboot:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Copy files to EC2
+        if: github.ref == 'refs/heads/main'
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+          USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} 'mkdir -p ~/app'
+          
+          scp -o StrictHostKeyChecking=no -i private_key.pem \
+            docker-compose.yml \
+            ${USERNAME}@${HOST}:~/app/
+
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
+            cd ~/app && \
+            docker-compose down || true && \
+            docker system prune -f && \
+            docker-compose pull && \
+            docker-compose up -d
+          '
+
+          rm -f private_key.pem
+
   deploy:
     needs: build-and-test
     if: github.ref == 'refs/heads/main'
-    timeout-minutes: 45
     runs-on: ubuntu-latest
 
     steps:
@@ -103,30 +86,9 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          debug: true  # Ativa logs detalhados
-          command_timeout: "20m"
           script: |
-            # Criar diretório se não existir
             mkdir -p ~/app
-
-            # Copiar docker-compose
-            cp ~/app/docker-compose.yml ~/app/docker-compose.yml.backup || true
-
-            # Download do docker-compose mais recente
-            curl -o ~/app/docker-compose.yml https://raw.githubusercontent.com/${{ github.repository }}/main/docker-compose.yml
-
-            # Parar containers existentes
             cd ~/app
-            docker-compose down || true
-
-            # Remover imagens antigas
-            docker system prune -f
-
-            # Pull da nova imagem
             docker-compose pull
-
-            # Subir aplicação
             docker-compose up -d
-
-            # Verificar logs
             docker-compose logs --tail=100
