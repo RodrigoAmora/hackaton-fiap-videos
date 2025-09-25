@@ -122,6 +122,8 @@ networks:
     driver: bridge
 
 volumes:
+  uploads:
+  outputs:
   prometheus-data:
   grafana-data:
   redis-data:
