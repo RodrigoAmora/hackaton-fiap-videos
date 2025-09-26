@@ -28,10 +28,6 @@ public class SwaggerConfig {
                         .title("API FIAP Vídeos")
                         .description("Documentação da API")
                         .version("1.0"))
-                .info(new Info()
-                        .title("API Autenticação")
-                        .description("Documentação da API")
-                        .version("1.0"))
                 .security(Arrays.asList(new SecurityRequirement().addList("bearerAuth")));
     }
 
