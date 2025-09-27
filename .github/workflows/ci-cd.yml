@@ -76,7 +76,7 @@ jobs:
           # Deploy
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
             cd ~/app && \
-            docker-compose down --volumes && \
+            docker-compose down && \
             docker-compose pull && \
             docker-compose up -d
           '
