@@ -49,7 +49,7 @@ http://localhost:8082/redoc
 ```
 
 ##
-Na pasta <b>`Postman`</b> contém a collection para usar os endpoints via Postman.
+Na pasta <b>`postman`</b> contém a collection para usar os endpoints via Postman.
 
 Banco de dados
 --------------
