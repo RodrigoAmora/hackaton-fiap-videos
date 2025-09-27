@@ -42,6 +42,7 @@ public class VideoListener {
             var resultZipPath = VideoUtil.VIDEO_FILE_OUTPUT_DIR + "/"+ videoId + ".zip";
             video.setResultZipPath(resultZipPath);
             video.setStatus(VideoStatus.DONE);
+            updatedStatusVideo(video);
 
             System.out.println("Worker: updated status to DONE for video " + videoId);
 
@@ -49,14 +50,12 @@ public class VideoListener {
         } else {
             video.setErrorMessage("Erro ao processar o vídeo");
             video.setStatus(VideoStatus.FAILED);
+            updatedStatusVideo(video);
 
             System.out.println("Worker: updated status to FAILED for video " + videoId);
 
             notificationService.notifyError(userEmail, videoId);
         }
-
-        // Atualiza status final
-        updatedStatusVideo(video);
     }
 
     private boolean processVideo(String videoId, String inputPath, String prefixFileName) {
