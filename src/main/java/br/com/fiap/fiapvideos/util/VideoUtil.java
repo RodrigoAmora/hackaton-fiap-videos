@@ -47,15 +47,14 @@ public class VideoUtil {
                 zos.closeEntry();
             }
 
-            videoMetrics.incrementVideoCompressionsSuccess();
             log.info("Worker: created zip at {}", fileName);
+
+            videoMetrics.incrementVideoCompressionsSuccess();
 
             return true;
         } catch (Exception e) {
             videoMetrics.incrementVideoCompressionsError();
             log.error("Video {} compression failed", fileName);
-
-            e.printStackTrace();
             return false;
         } finally {
             videoMetrics.incrementVideoCompressionsTotal();
