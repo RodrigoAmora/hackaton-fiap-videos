@@ -1,10 +1,12 @@
 package br.com.fiap.fiapvideos.amqp.config;
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
@@ -84,4 +86,18 @@ public class VideoAMQPConfig {
     ApplicationListener<ApplicationReadyEvent> inicializaAdmin(RabbitAdmin rabbitAdmin) {
         return event -> rabbitAdmin.initialize();
     }
+
+    @Bean
+    SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory,
+                                                                        SimpleRabbitListenerContainerFactoryConfigurer configurer) {
+
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        configurer.configure(factory, connectionFactory);
+
+        factory.setDefaultRequeueRejected(false);
+        factory.setAcknowledgeMode(AcknowledgeMode.AUTO);
+
+        return factory;
+    }
+
 }
