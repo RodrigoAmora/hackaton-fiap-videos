@@ -69,6 +69,8 @@ MAIL_PORT=587 <br>
 MAIL_USERNAME=Seu e-mail <br>
 MAIL_PASSWORD=Senha do seu e-mail <br>
 
+GRAFANA_ADMIN_PASSWORD=Senha do Grafana <br>
+
 Gerando o arquivo .jar
 ----------------------
 Para gerar o arquivo <b>.jar</b>, execute o comando na raiz do projeto:
@@ -182,6 +184,7 @@ Visualização e análise de métricas através de dashboards com o Grafana:
 http://localhost:3000/
 ```
 
+<b>Credenciais padrão:</b> <br>
 <b>Username:</b> admin <br>
 <b>Password:</b> admin
 
