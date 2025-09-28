@@ -132,6 +132,7 @@ Windows:
 
 RabbitMQ
 --------
+O projeto usa o RabbitMQ para mensageria.<br>
 Acesse o RabbitMQ através do endereço:
 ```shell script
 http://localhost:15672/
