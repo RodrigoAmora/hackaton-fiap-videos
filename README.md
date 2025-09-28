@@ -19,14 +19,14 @@ O projeto usa o Java 17 e as seguintes dependências:
 * Spring Data JPA
 * Spring dotenv
 * Jakarta Mail
-* Lombok
+* Feign
 * Devtools
+* Lombok
 * Micrometer
 * Actuator
 * RabbitMQ/AMQP
 * Swagger
 * OpenAPI
-* Feign
 * RabbitMQ
 * jUnit
 * Mockito
@@ -107,7 +107,7 @@ mvn spring-boot:run
 Rodando o projeto no Docker
 ---------------------------
 Para rodar o projeto em um container Docker, primeiro deve-se gerar o .jar do projeto.<br>
-Após isso, deve-se gerar o build das imagens e subir os containers do Docker.<br><br>
+Após a geração do jar, deve-se gerar o build das imagens e subir os containers do Docker.<br><br>
 <b>Fazendo o build das imagens:</b>
 ```shell script
 docker-compose build
