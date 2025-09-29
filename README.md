@@ -138,6 +138,7 @@ Acesse o RabbitMQ através do endereço:
 http://localhost:15672/
 ```
 
+<b>Credenciais padrão:</b> <br>
 <b>Usuário:</b> Guest <br>
 <b>Senha:</b> Guest
 
@@ -186,8 +187,8 @@ http://localhost:3000/
 ```
 
 <b>Credenciais padrão:</b> <br>
-<b>Username:</b> admin <br>
-<b>Password:</b> admin
+<b>Usuário:</b> admin <br>
+<b>Senha:</b> admin
 
 ##
 Caso queria rodar o projeto loclamente e rodar o Grafana via Docker, execute o comando:
