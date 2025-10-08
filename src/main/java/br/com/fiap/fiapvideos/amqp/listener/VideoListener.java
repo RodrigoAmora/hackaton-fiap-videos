@@ -47,10 +47,11 @@ public class VideoListener {
             updatedStatusVideo(video);
 
             // Processa o vídeo
-            boolean success = processVideo(String.valueOf(videoId), message.path(), message.prefixFileName());
+            String fileName = message.prefixFileName()+"_"+videoId + ".zip";
+            boolean success = processVideo(String.valueOf(videoId), message.path(), fileName);
             System.out.println("Result ---> " + success);
             if (success) {
-                var resultZipPath = VideoUtil.VIDEO_FILE_OUTPUT_DIR + "/" + videoId + ".zip";
+                var resultZipPath = VideoUtil.VIDEO_FILE_OUTPUT_DIR + "/" +fileName;
                 video.setResultZipPath(resultZipPath);
                 video.setStatus(VideoStatus.DONE);
                 updatedStatusVideo(video);
@@ -72,8 +73,8 @@ public class VideoListener {
         }
     }
 
-    private boolean processVideo(String videoId, String inputPath, String prefixFileName) {
-        return videoUtil.compactVideo(videoId, inputPath, prefixFileName);
+    private boolean processVideo(String videoId, String inputPath, String fileName) {
+        return videoUtil.compactVideo(videoId, inputPath, fileName);
     }
 
     private Video findVideoById(Long videoId) {

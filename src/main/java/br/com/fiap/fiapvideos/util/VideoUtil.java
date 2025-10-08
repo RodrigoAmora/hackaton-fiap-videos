@@ -23,10 +23,9 @@ public class VideoUtil {
     @Autowired
     private VideoMetrics videoMetrics;
 
-    public boolean compactVideo(String videoId, String inputPath, String prefixFileName) {
+    public boolean compactVideo(String videoId, String inputPath, String fileName) {
         log.info("Worker: processing video {} from {}", videoId, inputPath);
 
-        String fileName = prefixFileName+"_"+videoId + ".zip";
         try {
             Path outputDir = Paths.get(VIDEO_FILE_OUTPUT_DIR);
             createDirectories(outputDir);
