@@ -1,7 +1,7 @@
 # hackaton-fiap-videos
 Descrição
 ---------
-Micro-Serviço de upload e processamento de vídeos do Hackaton da pós de Arquitetura de Software da FIAP.
+Microsserviço de upload e processamento de vídeos do Hackaton da pós de Arquitetura de Software da FIAP.
 
 Participantes
 -------------
