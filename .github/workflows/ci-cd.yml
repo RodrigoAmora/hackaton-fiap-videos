@@ -55,7 +55,7 @@ jobs:
           chmod 600 private_key.pem
           
           # Cria pasta no servidor
-          ssh -o StrictHostKeyChecking=no -i key.pem ${USERNAME}@${HOST} "
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} "
             mkdir -p ~/app
           "
           
