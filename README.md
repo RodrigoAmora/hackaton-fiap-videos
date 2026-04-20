@@ -3,6 +3,12 @@ Descrição
 ---------
 Microsserviço de upload e processamento de vídeos do Hackaton da pós de Arquitetura de Software da FIAP.
 
+Avaliação
+---------
+Avaliação do projeto pelos professores da pós.<br> 
+Nota: 89,14 de 90<br>
+![](imagens/avalicao-hackaton.png)
+
 Participantes
 -------------
 * Bruno do Amor Divino da Paixão - RM360643
