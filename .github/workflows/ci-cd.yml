@@ -54,39 +54,24 @@ jobs:
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           
-          mkdir -p prometheus
+          # Cria pasta no servidor
+          ssh -o StrictHostKeyChecking=no -i key.pem ${USERNAME}@${HOST} "
+            mkdir -p ~/app
+          "
           
-          # Criar configuração do Prometheus
-          cat << EOF > prometheus/prometheus.yml
-          global:
-            scrape_interval: 15s
-          
-          scrape_configs:
-            - job_name: 'spring-actuator'
-              metrics_path: '/actuator/prometheus'
-              static_configs:
-                - targets: ['fiap-videos:8082']
-          EOF
-          
-          # Preparar ambiente na EC2
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
-            sudo mkdir -p ~/app/prometheus &&
-            sudo chmod 777 ~/app/prometheus
-          '
-          
-          # Copiar arquivos
-          scp -o StrictHostKeyChecking=no -i private_key.pem \
-            docker-compose.yml prometheus.yml \
+          # Copia arquivos (IMPORTANTE: copia a pasta prometheus inteira)
+          scp -o StrictHostKeyChecking=no -i key.pem -r \
+            docker-compose.yml prometheus \
             ${USERNAME}@${HOST}:~/app/
+          
           
           # Deploy
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
             cd ~/app && \
-            ls -l ./prometheus/ && \
-            cat ./prometheus/prometheus.yml
-            docker-compose down && \
-            docker-compose pull && \
-            docker-compose up -d
+            docker compose down || true && \
+            docker compose pull && \
+            docker compose up -d && \
+            docker compose ps
           '
           
           rm -f private_key.pem
