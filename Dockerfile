@@ -4,8 +4,9 @@ WORKDIR /build
 COPY . .
 RUN mvn clean package -DskipTests
 
+
 # Run stage
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-slim
 WORKDIR /app
 COPY --from=build /build/target/*.jar app.jar
 RUN mkdir -p /uploads /outputs
