@@ -60,7 +60,7 @@ jobs:
           "
           
           # Copia arquivos (IMPORTANTE: copia a pasta prometheus inteira)
-          scp -o StrictHostKeyChecking=no -i key.pem -r \
+          scp -o StrictHostKeyChecking=no -i private_key.pem -r \
             docker-compose.yml prometheus \
             ${USERNAME}@${HOST}:~/app/
           
