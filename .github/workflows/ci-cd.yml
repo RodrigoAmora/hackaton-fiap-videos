@@ -68,7 +68,8 @@ jobs:
           
           # Preparar ambiente na EC2
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOST} '
-            mkdir -p ~/app
+            mkdir -p ~/app/prometheus
+            touch ~/app/prometheus/prometheus.yml
           '
           
           # Copiar arquivos
