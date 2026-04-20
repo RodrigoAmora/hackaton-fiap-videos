@@ -6,7 +6,7 @@ RUN mvn clean package -DskipTests
 
 
 # Run stage
-FROM openjdk:17-slim
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 COPY --from=build /build/target/*.jar app.jar
 RUN mkdir -p /uploads /outputs
