@@ -55,7 +55,7 @@ jobs:
           chmod 600 private_key.pem
           
           # Criar configuração do Prometheus
-          cat << EOF > prometheus.yml
+          cat << EOF > prometheus/prometheus.yml
           global:
             scrape_interval: 15s
           
