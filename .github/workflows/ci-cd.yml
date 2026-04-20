@@ -51,7 +51,7 @@ jobs:
           HOST: ${{ secrets.EC2_HOST }}
           USERNAME: ${{ secrets.EC2_USERNAME }}
         run: |
-          echo "$PRIVATE_KEY" > private_key.pem
+          echo "$PRIVATE_KEY" | sed 's/\\n/\n/g' > key.pem
           chmod 600 private_key.pem
           
           # Cria pasta no servidor
