@@ -54,6 +54,8 @@ jobs:
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           
+          mkdir -p prometheus
+          
           # Criar configuração do Prometheus
           cat << EOF > prometheus/prometheus.yml
           global:
